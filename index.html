@@ -1,0 +1,178 @@
+				<!DOCTYPE html>
+				<head>
+				<html lang="en-US">
+				<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+				<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+				</head>
+				<body>
+
+				<div ng-app="myApp" ng-controller="myCtrl">
+
+
+
+				<ul>
+
+					<li ng-repeat="dom in domaines" ng-model="domShow">  
+						<span ng-click="domShow=!domShow"> {{dom.name}}</span>
+						<ul ng-show="domShow">
+							    <li ng-repeat="mat in dom.matieres" ng-model="matShow"><span ng-click="matShow=!matShow">{{mat.name}}</span>
+								<ul ng-show="matShow">
+										<li ng-repeat="ch in mat.chapitres  | orderBy:'ch.id'">{{ch.name}}</li>
+								
+										<input type="text" ng-model="chapitre.name" placeholder="chapitre" ng-keypress="$event.which === 13 && addChap(mat,this.chapitre)">
+								</ul>
+								</li>
+								 <input type="text" ng-model="matiere.name" placeholder="matiere" ng-keypress="$event.which === 13 && addMat(dom,this.matiere)">
+						</ul>
+						
+					</li>
+				 <input type="text" ng-model="domaine" placeholder="domaine" ng-keypress="($event.which == 13)&&addDom($event)">
+				</ul>
+			</div>
+
+			<script>
+			var app = angular.module('myApp', []);
+			app.controller('myCtrl', function($scope,$http) {
+
+
+				 $http({
+	    method : "GET",
+	    url : "/studAngular/api/getAll",
+	  }).then(function mySucces(response) {
+	  		a = response.data;
+	  		index = 0;
+	  		console.log(a)
+	  		while(a[index])
+	  		{
+	  			
+
+	  			
+	  			
+	  			
+	  			
+	  			
+
+	  		idDom = a[index]['idDom'];
+	  		
+	  			//domaine
+	  			dom=a[index];
+	  				domaine={"name":dom['nameDom'],"id":dom['idDom'],"matieres":[]}
+
+	  					$scope.domaines.push(domaine);
+	  		while(idDom==a[index]['idDom'])
+	  			{
+	  				
+
+	  			//	console.log(domaine.name);
+
+					domTmp=a[index];
+	  				matiere={"name":domTmp['nameMat'],"id":domTmp['idMat'],"chapitres":[]}
+	  					idMat=domTmp['idMat']
+	  					
+	  					domaine.matieres.push(matiere)
+	  					while(idDom==a[index]['idDom'] && idMat==a[index]['idMat'])
+	  					{
+	  						console.log(idDom);
+	  						//if(a[index]['nameChap'])
+	  						chapitre={"name":a[index]['nameChap'],"id":a[index]['idChap']};
+	  						if(a[index]['nameChap'])
+	  						matiere.chapitres.push(chapitre);
+
+	  						index++;
+	  					}
+	  					//console.log(matiere)
+	  				
+	  				
+	  			
+	  		
+	  			//index++;
+	  			}
+	  			
+
+	  			
+	  			//index++;
+
+	  		}
+	  		
+
+	    }, function myError(response) {
+	     console.log(response.statusText);
+	  });
+
+
+				$scope.domShow=false;
+			    $scope.firstName= "John";
+			    $scope.lastName= "Doe";
+			    $scope.domaines = [];
+
+
+
+
+			    $scope.addDom = function(keyEvent) {
+			
+
+			  	console.log(keyEvent)
+			 //   alert('I am an alert');
+			 	
+			 			 $http({
+	    method : "GET",
+	    url : "/studAngular/api/addDom",
+	    params: { domaine: $scope.domaine }
+	  }).then(function mySucces(response) {
+	  	$scope.domaines.push({"name":$scope.domaine,"id":response.data,"matieres":[]}); 
+	      $scope.domaine="" 
+	    }, function myError(response) {
+	     console.log(response.statusText);
+	  });
+				
+			};
+
+
+			 $scope.addMat = function(domaine,matiere) {
+		if(matiere)
+			 			 			 $http({
+	    method : "GET",
+	    url : "/studAngular/api/addMat",
+	    params: { idDom: domaine.id, matiere: matiere.name }
+	  }).then(function mySucces(response) {
+	      	domaine.matieres.push({"name":matiere.name,"id":response.data,"chapitres":[]})
+		  	matiere.name=""
+	    }, function myError(response) {
+	     console.log(response.statusText);
+	  });
+
+		  		
+		  	
+		  		
+			};
+
+
+			 $scope.addChap = function(matiere,chapitre) {
+
+
+		if(chapitre)
+		$http({
+	    method : "GET",
+	    url : "/studAngular/api/addChap",
+	    params: { idMat: matiere.id, chapitre: chapitre.name }
+	 	 }).then(function mySucces(response) {
+	      	matiere.chapitres.push({"name":chapitre.name,"id":response.data})
+		  	chapitre.name=""
+	    }, function myError(response) {
+	     console.log(response.statusText);
+	  	});
+		
+			};
+
+
+
+
+
+
+		});
+
+
+
+			</script>
+				</body>
+				</html> 
