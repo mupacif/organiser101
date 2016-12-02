@@ -18,7 +18,7 @@ $app->get('/', function () {
 // Home page
 
 
-$app->get('/studAngular/api/addDom', function (Request $request) use($app) {
+$app->get('/addDom', function (Request $request) use($app) {
    
     $domaine = $request->get('domaine');
 
@@ -26,7 +26,7 @@ $app->get('/studAngular/api/addDom', function (Request $request) use($app) {
     return  $app['sql.DAO']->insertDomain($domaine);  // 201 = Created
 });
 
-$app->get('/studAngular/api/addMat', function (Request $request) use($app) {
+$app->get('/addMat', function (Request $request) use($app) {
    
  $idDomaine = $request->get('idDom');
  $matiere = $request->get('matiere');
@@ -34,7 +34,7 @@ $app->get('/studAngular/api/addMat', function (Request $request) use($app) {
    return $app['sql.DAO']->insertMat($idDomaine,$matiere);;
 });
 
-$app->get('/studAngular/api/addChap', function (Request $request) use($app) {
+$app->get('/addChap', function (Request $request) use($app) {
    
  $idMat = $request->get('idMat');
  $chapitre = $request->get('chapitre');
@@ -44,12 +44,12 @@ $app->get('/studAngular/api/addChap', function (Request $request) use($app) {
 
 
 
-$app->get('/studAngular/api/getAll', function (Request $request) use($app){
+$app->get('/getAll', function (Request $request) use($app){
    
  
    return new JsonResponse($app['sql.DAO']->getAll());
 });
-$app->get('/studAngular/api/test', function () use($app){
+$app->get('/test', function () use($app){
    
  
  $app['sql.DAO']->insert("hahaha");
