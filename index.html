@@ -33,11 +33,11 @@
 			<script>
 			var app = angular.module('myApp', []);
 			app.controller('myCtrl', function($scope,$http) {
-
+				   path="Code/Games/organiser/";
 
 				 $http({
 	    method : "GET",
-	    url : "/api/getAll",
+	    url : path+"/api/getAll",
 	  }).then(function mySucces(response) {
 	  		a = response.data;
 	  		index = 0;
@@ -106,7 +106,7 @@
 			    $scope.domaines = [];
 
 
-
+			 
 
 			    $scope.addDom = function(keyEvent) {
 			
@@ -116,7 +116,7 @@
 			 	
 			 			 $http({
 	    method : "GET",
-	    url : "/api/addDom",
+	    url : path+"/api/addDom",
 	    params: { domaine: $scope.domaine }
 	  }).then(function mySucces(response) {
 	  	$scope.domaines.push({"name":$scope.domaine,"id":response.data,"matieres":[]}); 
@@ -132,7 +132,7 @@
 		if(matiere)
 			 			 			 $http({
 	    method : "GET",
-	    url : "/api/addMat",
+	    url : path+"/api/addMat",
 	    params: { idDom: domaine.id, matiere: matiere.name }
 	  }).then(function mySucces(response) {
 	      	domaine.matieres.push({"name":matiere.name,"id":response.data,"chapitres":[]})
@@ -153,7 +153,7 @@
 		if(chapitre)
 		$http({
 	    method : "GET",
-	    url : "/api/addChap",
+	    url : path+"/api/addChap",
 	    params: { idMat: matiere.id, chapitre: chapitre.name }
 	 	 }).then(function mySucces(response) {
 	      	matiere.chapitres.push({"name":chapitre.name,"id":response.data})
